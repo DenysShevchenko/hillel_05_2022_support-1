@@ -1,5 +1,6 @@
 from __future__ import annotations
-from dataclasses import dataclass, asdict
+
+from dataclasses import asdict, dataclass
 
 import requests
 from django.http import JsonResponse
@@ -25,7 +26,7 @@ class ExchangeRate:
     from_: str
     to: str
     value: float
-    
+
     @classmethod
     def from_response(cls, response: requests.Response) -> ExchangeRate:
         pure_response: dict = response.json()["Realtime Currency Exchange Rate"]
@@ -34,12 +35,13 @@ class ExchangeRate:
         value = pure_response["5. Exchange Rate"]
 
         return cls(from_=from_, to=to, value=value)
-    
+
     def __eq__(self, other: ExchangeRate) -> bool:
         return self.value == other.value
-    
+
 
 ExchangeRates = list[ExchangeRate]
+
 
 class ExchangeRatesHistory:
     _history: ExchangeRates = []
@@ -52,14 +54,12 @@ class ExchangeRatesHistory:
             cls._history.append(instance)
         elif cls._history[-1] != instance:
             cls._history.append(instance)
-    
+
     @classmethod
     def as_dict(cls) -> dict:
         """Main representation interface"""
 
-        return {
-            "results": [asdict(er) for er in cls._history]
-        }
+        return {"results": [asdict(er) for er in cls._history]}
 
 
 def btc_usd(request):
