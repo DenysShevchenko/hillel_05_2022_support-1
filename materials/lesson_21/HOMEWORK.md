@@ -1,9 +1,11 @@
 ## <span style="color:green">Homework</span>
 
 ### EN
+- Complete lesson
 - The response from `tickets/` should be like in exaple below.
 
 ### UA
+- Закінчити все, що було на занятті
 - Відповідь при зверненні до `tickets/` повинна бути, як в прикладі нижче.
 
 ```json
