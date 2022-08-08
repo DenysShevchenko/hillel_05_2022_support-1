@@ -35,7 +35,10 @@ def ticket_as_dict(ticket: Ticket) -> dict:
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = "__all__"
+        exclude = [
+            "created_at",
+            "updated_at",
+        ]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -43,7 +46,18 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = "__all__"
+        exclude = [
+            "password",
+            "last_login",
+            "updated_at",
+            "is_active",
+            "is_staff",
+            "is_superuser",
+            "created_at",
+            "updateed_at",
+            "groups",
+            "user_permissions",
+        ]
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -55,8 +69,35 @@ class TicketSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+# class RoleLightSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Role
+#         fields = ["id", "name"]
+
+
+# class UserLightSerializer(serializers.ModelSerializer):
+#     role = RoleLightSerializer()
+
+#     class Meta:
+#         model = User
+#         fields = ["id", "username", "email", "role"]
+
+
+class TicketLightSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ["id", "theme", "resolved", "operator", "client"]
+
+
 @api_view(["GET"])
 def get_all_tickets(request):
     tickets = Ticket.objects.all()
-    data = TicketSerializer(tickets, many=True).data
+    data = TicketLightSerializer(tickets, many=True).data
+    return Response(data=data)
+
+
+@api_view(["GET"])
+def get_ticket(request, id_: int):
+    tickets = Ticket.objects.get(id=id_)
+    data = TicketSerializer(tickets).data
     return Response(data=data)
