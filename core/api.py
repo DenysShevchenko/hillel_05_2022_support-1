@@ -16,8 +16,8 @@ def get_post_tickets(request):
     serializer = TicketSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    instance = serializer.create(serializer.validated_data)
-    results = TicketSerializer(instance).data
+    instance: Ticket = serializer.create(serializer.validated_data)
+    results: dict = TicketSerializer(instance).data
 
     return Response(data=results, status=status.HTTP_201_CREATED)
 
